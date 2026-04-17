@@ -12,21 +12,15 @@
         .container { padding: 20px; }
         .page { display: none; }
         .active { display: block; }
-        
-        /* Posts et Messages */
-        .post { background: var(--grey); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
         .btn-gold { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 20px;}
         
-        /* Lecteur Musique */
-        .music-card { background: var(--grey); padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; border: 1px solid var(--gold); }
-        .play-btn { color: var(--gold); font-size: 24px; cursor: pointer; }
+        /* Style Contacts & Tchat */
+        .member-card { background: var(--grey); padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 3px solid var(--gold); display: flex; justify-content: space-between; align-items: center; }
+        .msg-box { background: #333; padding: 10px; border-radius: 8px; margin-top: 5px; font-size: 14px; border: 1px dashed var(--gold); }
 
-        /* Navigation */
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid var(--gold); }
         .nav-item { color: var(--gold); text-align: center; cursor: pointer; font-size: 12px; }
         .nav-item i { font-size: 20px; display: block; margin-bottom: 5px; }
-
-        /* Ecran login */
         #login-screen { position: fixed; top:0; left:0; width: 100%; height: 100%; background: var(--black); z-index: 1000; display: flex; align-items: center; justify-content: center; }
         input { width: 100%; padding: 15px; margin: 10px 0; background: var(--grey); border: 1px solid var(--gold); color: white; border-radius: 8px; box-sizing: border-box; }
     </style>
@@ -36,9 +30,9 @@
 <div id="login-screen" style="display: none;">
     <div style="width: 80%; text-align: center;">
         <h1 style="color: var(--gold);">YHWH RO'I</h1>
-        <input type="text" id="user-name" placeholder="Nom complet">
-        <input type="tel" id="user-phone" placeholder="Numéro de téléphone">
-        <button class="btn-gold" onclick="connexion()">COMMENCER</button>
+        <input type="text" id="user-name" placeholder="Ton Nom">
+        <input type="tel" id="user-phone" placeholder="Ton Numéro">
+        <button class="btn-gold" onclick="connexion()">ENTRER</button>
     </div>
 </div>
 
@@ -46,49 +40,34 @@
 
 <div class="container">
     <div id="page-bible" class="page active">
-        <h2 style="color: var(--gold);">📖 Bible LSG</h2>
-        <select id="select-book" onchange="chargerBible()" style="width:100%; padding:10px; background:var(--grey); color:var(--gold); border:1px solid var(--gold); border-radius:8px;">
-            <option value="">-- Choisir un livre --</option>
+        <h2 style="color: var(--gold);">📖 Bible</h2>
+        <select id="select-book" onchange="chargerBible()" style="width:100%; padding:10px; background:var(--grey); color:var(--gold); border:1px solid var(--gold);">
             <option value="GEN">Genèse</option>
             <option value="PSA">Psaumes</option>
-            <option value="JOH">Jean</option>
+            <option value="MAT">Matthieu</option>
             <option value="REV">Apocalypse</option>
         </select>
-        <div id="bible-text" style="margin-top:20px; line-height:1.8;"></div>
+        <div id="bible-text" style="margin-top:20px;"></div>
     </div>
 
     <div id="page-social" class="page">
-        <h2 style="color: var(--gold);">🙏 Communauté</h2>
-        <button class="btn-gold" onclick="publierPost()">+ Partager un enseignement</button>
-        <div id="feed-container"></div>
+        <h2 style="color: var(--gold);">👥 Contacts & Tchat</h2>
+        <div id="members-list">Chargement des membres...</div>
+        <hr border="1" color="#FFD700">
+        <h3 style="color: var(--gold);">📩 Mes Messages</h3>
+        <div id="messages-recus"></div>
     </div>
 
     <div id="page-music" class="page">
-        <h2 style="color: var(--gold);">🎶 Louange & Adoration</h2>
-        <div class="music-card">
-            <i class="fas fa-play-circle play-btn"></i>
-            <div>
-                <b>Hillsong En Français</b><br>
-                <small>Voici mon coeur</small>
-            </div>
-        </div>
-        <div class="music-card">
-            <i class="fas fa-play-circle play-btn"></i>
-            <div>
-                <b>Dena Mwana</b><br>
-                <small>Saint-Esprit</small>
-            </div>
-        </div>
+        <h2 style="color: var(--gold);">🎶 Musique</h2>
+        <p>Lecteur en cours de synchronisation...</p>
     </div>
 
     <div id="page-profil" class="page">
         <div style="text-align: center; background: var(--grey); padding: 20px; border-radius: 15px; border: 1px solid var(--gold);">
-            <div style="width:80px; height:80px; background:#333; border-radius:50%; margin: 0 auto 15px; display:flex; align-items:center; justify-content:center; border: 2px solid var(--gold);">
-                <i class="fas fa-user" style="font-size:30px; color:var(--gold)"></i>
-            </div>
             <h2 id="display-name" style="color: var(--gold);"></h2>
-            <p id="display-phone" style="opacity:0.7;"></p>
-            <p>Rôle : Disciple de Christ</p>
+            <p id="display-phone"></p>
+            <button class="btn-gold" onclick="localStorage.clear(); location.reload();">Déconnexion</button>
         </div>
     </div>
 </div>
@@ -97,12 +76,12 @@
     <div class="nav-item" onclick="changerPage('page-bible')"><i class="fas fa-book"></i>Bible</div>
     <div class="nav-item" onclick="changerPage('page-social')"><i class="fas fa-users"></i>Social</div>
     <div class="nav-item" onclick="changerPage('page-music')"><i class="fas fa-music"></i>Musique</div>
-    <div class="nav-item" onclick="changerPage('page-profil')"><i class="fas fa-user-circle"></i>Profil</div>
+    <div class="nav-item" onclick="changerPage('page-profil')"><i class="fas fa-user"></i>Profil</div>
 </nav>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+  import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyA0whfq-_NofiJ0Yw1adwpc_zA2hzHM3c",
@@ -115,53 +94,73 @@
 
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
-  const postsRef = ref(database, 'posts');
 
+  // CONNEXION
   window.connexion = function() {
       const name = document.getElementById('user-name').value;
       const phone = document.getElementById('user-phone').value;
       if(name && phone) {
           localStorage.setItem('yhwh_user', name);
           localStorage.setItem('yhwh_phone', phone);
+          // On enregistre dans Firebase
+          set(ref(database, 'membres/' + phone), { nom: name, numero: phone });
           location.reload(); 
       }
   };
 
-  window.publierPost = function() {
-      const texte = prompt("Votre message pour la communauté :");
-      if(texte) {
-          push(postsRef, { auteur: localStorage.getItem('yhwh_user'), message: texte, date: Date.now() });
+  // AFFICHAGE DES MEMBRES
+  onValue(ref(database, 'membres'), (snapshot) => {
+      const membersDiv = document.getElementById('members-list');
+      membersDiv.innerHTML = "";
+      snapshot.forEach((child) => {
+          const m = child.val();
+          if(m.numero !== localStorage.getItem('yhwh_phone')) {
+              membersDiv.innerHTML += `
+                <div class="member-card">
+                    <span><b>${m.nom}</b></span>
+                    <button onclick="envoyerMsg('${m.numero}', '${m.nom}')" style="background:var(--gold); border:none; border-radius:5px; padding:5px 10px;">Converser</button>
+                </div>`;
+          }
+      });
+  });
+
+  // ENVOYER MESSAGE
+  window.envoyerMsg = function(destId, destNom) {
+      const t = prompt("Message pour " + destNom);
+      if(t) {
+          push(ref(database, 'messages'), {
+              de: localStorage.getItem('yhwh_user'),
+              pour: destId,
+              texte: t
+          });
+          alert("Envoyé !");
       }
   };
 
-  onValue(postsRef, (snapshot) => {
-      const data = snapshot.val();
-      const container = document.getElementById('feed-container');
+  // RECEVOIR MESSAGES
+  onValue(ref(database, 'messages'), (snapshot) => {
+      const container = document.getElementById('messages-recus');
       container.innerHTML = "";
-      for (let id in data) {
-          const p = data[id];
-          container.innerHTML = `<div class="post"><b>${p.auteur}</b><p style="margin:5px 0;">${p.message}</p></div>` + container.innerHTML;
-      }
+      snapshot.forEach((child) => {
+          const msg = child.val();
+          if(msg.pour === localStorage.getItem('yhwh_phone')) {
+              container.innerHTML += `<div class="msg-box"><b>${msg.de} :</b> ${msg.texte}</div>`;
+          }
+      });
   });
 
-  window.changerPage = function(id) {
+  window.changerPage = (id) => {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById(id).classList.add('active');
   };
 
-  window.chargerBible = async function() {
+  window.chargerBible = async () => {
       const book = document.getElementById('select-book').value;
-      const textDiv = document.getElementById('bible-text');
-      if(!book) return;
-      textDiv.innerHTML = "Chargement...";
-      try {
-          const res = await fetch(`https://bible-api.com/${book}+1?translation=lsg`);
-          const data = await res.json();
-          textDiv.innerHTML = `<h3>${data.reference}</h3>` + data.verses.map(v => `<p><b style="color:var(--gold)">${v.verse}</b> ${v.text}</p>`).join('');
-      } catch (e) { textDiv.innerHTML = "Erreur de chargement."; }
+      const res = await fetch(`https://bible-api.com/${book}+1?translation=lsg`);
+      const data = await res.json();
+      document.getElementById('bible-text').innerHTML = data.verses.map(v => `<p><b>${v.verse}</b> ${v.text}</p>`).join('');
   };
 
-  // Verif session
   if(!localStorage.getItem('yhwh_user')) {
       document.getElementById('login-screen').style.display = 'flex';
   } else {
